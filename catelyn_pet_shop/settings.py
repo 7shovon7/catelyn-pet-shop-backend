@@ -17,6 +17,14 @@ ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://www.catelynpetshop.com',
+    'https://catelynpetshop.com',
+    'https://*.catelynpetshop.com',
+]
+
+CSRF_COOKIE_SECURE = True
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

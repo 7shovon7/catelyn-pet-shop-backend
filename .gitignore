@@ -2,6 +2,7 @@
 *.db
 *.sqlite3
 staticfiles/
+test.txt
 
 ### Django ###
 *.log
