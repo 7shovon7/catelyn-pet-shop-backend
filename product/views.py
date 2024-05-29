@@ -1,3 +1,36 @@
-from django.shortcuts import render
+# product/views.py
+from rest_framework import viewsets, serializers
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from .models import Category, Product, Review
+from .paginations import ProductPagination, ReviewPagination
+from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer
 
-# Create your views here.
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = ProductPagination
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = ReviewPagination
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        if serializer.instance.user != self.request.user:
+            raise serializers.ValidationError("You are not allowed to update this review.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance.user != self.request.user:
+            raise serializers.ValidationError("You are not allowed to delete this review.")
+        instance.delete()
