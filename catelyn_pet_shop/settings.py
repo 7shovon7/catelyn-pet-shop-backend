@@ -106,6 +106,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'database.sqlite3',
     },
+    'sqlite3-prod-copy': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'prod_db.sqlite3',
+    },
 }
 # DB_KEY var is not needed in production
 DB_KEY = os.getenv('DB_KEY') if (os.getenv('DB_KEY') is not None and os.getenv('DB_KEY') in DATABASES) else 'sqlite3'
