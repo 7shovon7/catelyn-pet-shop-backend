@@ -4,6 +4,7 @@ from core.models import User
 
 class Category(models.Model):
     title = models.CharField(max_length=255, unique=True)
+    image = models.ImageField(upload_to='product/categories/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
