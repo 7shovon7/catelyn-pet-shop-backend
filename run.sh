@@ -7,14 +7,14 @@ cd /root/cps/backend
 source .venv/bin/activate
 
 # Install required modules
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 
 # Collect static files
 echo "Collecting static files..."
-python3 manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
 
 # Apply DB migration
-python3 manage.py migrate
+python manage.py migrate
 
 # Start gunicorn server
 echo "Starting the server..."
