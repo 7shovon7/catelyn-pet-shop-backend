@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
+    'markdownx',
 
     'core',
     'product',
     'order',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -208,6 +212,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 # AWS_S3_FILE_OVERWRITE = False
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+# MardownX
+# MARKDOWNX_MEDIA_PATH = 'markdownx/uploads/'  # where uploaded images will be stored
+# MARKDOWNX_URLS_PATH = '/markdownx/uploads/'  # URL path for accessing uploaded images
+
+# Optional: Additional settings for Markdownx
+MARKDOWNX_EDITOR_RESIZABLE = True
+MARKDOWNX_UPLOAD_MAX_SIZE = 5242880  # 5MB
+# MARKDOWNX_IMAGE_MAX_SIZE = {'size': (1000, 1000), 'quality': 90}  # max size for image uploads
 
 
 # Global constants
