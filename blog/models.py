@@ -9,6 +9,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=255, unique=True)
     title_en = models.CharField(max_length=255, unique=True, blank=True)
     slug = models.CharField(max_length=255, unique=True, blank=True)
+    featured_image = models.CharField(max_length=255, blank=True, null=True)
     content = MarkdownxField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -22,8 +23,8 @@ class BlogPost(models.Model):
     def save(self, *args, **kwargs):
         if not self.title_en:
             self.title_en = str(uuid.uuid4())
-        if not self.slug:
-            self.slug = slugify(self.title_en)
+        # if not self.slug:
+        self.slug = slugify(self.title_en)
             # if BlogPost.objects.filter(slug=self.slug).exists():
             #     counter = 1
             #     original_slug = self.slug
