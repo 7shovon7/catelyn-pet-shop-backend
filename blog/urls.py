@@ -9,4 +9,5 @@ router.register(r'posts', BlogPostViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('posts/slug/<slug:slug>/', BlogPostViewSet.as_view({'get': 'retrieve'}), name='blogpost-detail-by-slug'),
 ]
