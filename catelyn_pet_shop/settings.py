@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
     'markdownx',
+    'django_filters',
 
     'core',
     'product',
@@ -165,7 +166,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '20/minute',
+        'anon': '1800/hour',
         'user': '5000/day',
     },
 }

@@ -1,5 +1,6 @@
 # product/views.py
-from rest_framework import viewsets, serializers
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, serializers, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Category, Product, Review
 from .paginations import ProductPagination, ReviewPagination
@@ -15,6 +16,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = ProductPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['category']
+    search_fields = ['title', 'description']
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
