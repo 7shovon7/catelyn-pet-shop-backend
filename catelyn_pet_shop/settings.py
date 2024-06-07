@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
     'markdownx',
+    'django_filters',
 
     'core',
     'product',
