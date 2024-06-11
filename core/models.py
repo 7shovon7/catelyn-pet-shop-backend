@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(max_length=255, unique=True)
     full_name = models.CharField(max_length=100)
-    user_role = models.CharField(max_length=20, choices=ROLE_CHOICES, null=True, blank=True)
+    user_role = models.CharField(max_length=20, choices=ROLE_CHOICES, null=True, blank=True, default=settings.K_CUSTOMER_USER_ROLE)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)

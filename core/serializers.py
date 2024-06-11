@@ -9,9 +9,8 @@ from core.models import Customer, ProductManager
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
-    username = serializers.CharField(read_only=True)
     class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'email', 'username', 'password', 'full_name', 'user_role']
+        fields = ['id', 'email', 'password', 'full_name', 'user_role']
 
     def create(self, validated_data):
         user = super().create(validated_data)
@@ -31,7 +30,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
 class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
-        fields = ['id', 'email', 'username', 'full_name', 'user_role']
+        fields = ['id', 'email', 'full_name', 'user_role']
         
 
 class TokenObtainPairSerializer(BaseTokenObtainPairSerializer):
