@@ -9,7 +9,6 @@ from core.models import Customer, ProductManager
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
-    username = serializers.CharField(read_only=True)
     class Meta(BaseUserCreateSerializer.Meta):
         fields = ['id', 'email', 'password', 'full_name', 'user_role']
 
