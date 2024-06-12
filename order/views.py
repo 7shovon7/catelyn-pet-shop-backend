@@ -17,6 +17,15 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        order = serializer.instance
+        order.update_total()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        instance.update_total()
+
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
@@ -39,9 +48,18 @@ class OrderItemViewSet(viewsets.ModelViewSet):
             existing_order_item.save()
         else:
             serializer.save()
+        
+        # Update the order total after adding the item
+        order.update_total()
 
     def perform_update(self, serializer):
         order = serializer.validated_data.get('order')
         if order.user != self.request.user:
             raise serializers.ValidationError("You are not allowed to update items in this order.")
         serializer.save()
+        order.update_total()
+
+    def perform_destroy(self, instance):
+        order = instance.order
+        instance.delete()
+        order.update_total()
