@@ -1,6 +1,8 @@
 # product/models.py
 
 from django.db import models
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 from core.models import User
 
 
@@ -17,7 +19,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = MarkdownxField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField()
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
@@ -27,6 +29,9 @@ class Product(models.Model):
     
     def __str__(self) -> str:
         return self.title
+    
+    def formatted_markdown(self):
+        return markdownify(self.description)
 
 
 class Review(models.Model):
