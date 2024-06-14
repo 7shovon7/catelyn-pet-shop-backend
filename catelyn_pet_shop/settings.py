@@ -21,6 +21,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.catelynpetshop.com',
     'https://catelynpetshop.com',
     'https://*.catelynpetshop.com',
+    'https://*.shovon.info',
 ]
 
 CSRF_COOKIE_SECURE = True
@@ -117,7 +118,7 @@ DATABASES = {
     },
 }
 # DB_KEY var is not needed in production
-DB_KEY = os.getenv('DB_KEY') if (os.getenv('DB_KEY') is not None and os.getenv('DB_KEY') in DATABASES) else 'sqlite3'
+DB_KEY = os.getenv('DB_KEY') if (os.getenv('DB_KEY') is not None and os.getenv('DB_KEY') in DATABASES) else 'postgres'
 DATABASES['default'] = DATABASES[DB_KEY]
 
 
