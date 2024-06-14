@@ -21,6 +21,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.catelynpetshop.com',
     'https://catelynpetshop.com',
     'https://*.catelynpetshop.com',
+    'https://*.shovon.info',
 ]
 
 CSRF_COOKIE_SECURE = True
