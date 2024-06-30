@@ -1,6 +1,7 @@
 ### Custom ###
 *.db
 *.sqlite3
+*.backup
 staticfiles/
 test.txt
 
