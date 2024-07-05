@@ -1,3 +1,42 @@
+from io import BytesIO
+import sys
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+
+def optimize_image(img, desired_height: int = 800):
+    im = Image.open(img)
+    im_format = im.format
+    w, h = im.size
+    if h > desired_height:
+        aspect_ratio = w / h
+        w = int(desired_height * aspect_ratio)
+        h = desired_height
+    im = im.resize((w, h), Image.LANCZOS)
+    output = BytesIO()
+    
+    im.save(output, format=im_format, optimize=True, quality=50)    
+    output.seek(0)
+    
+    return output, im_format
+
+
+def optimize_image_in_upload_model(img, desired_height=800):
+        
+    output, im_format = optimize_image(img=img, desired_height=desired_height)
+    
+    modified_file = InMemoryUploadedFile(
+        file=output,
+        field_name='ImageField',
+        name=img.name,
+        content_type=f'image/{im_format.lower()}',
+        size=sys.getsizeof(output),
+        charset=None,
+    )
+    
+    return modified_file
+
+
 def change_filename(folder_path, original_filename, given_filename):
     file_parts = original_filename.split('.')
     if len(file_parts) > 1:
