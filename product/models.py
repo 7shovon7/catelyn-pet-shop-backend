@@ -4,6 +4,7 @@ from django.db import models
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 from core.models import User
+from core.utils import optimize_image_in_upload_model
 
 
 class Category(models.Model):
@@ -15,6 +16,11 @@ class Category(models.Model):
     
     def __str__(self) -> str:
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.image:
+            self.image = optimize_image_in_upload_model(self.image, desired_height=300)
+        super().save(*args, **kwargs)
 
 
 class Product(models.Model):
@@ -29,6 +35,11 @@ class Product(models.Model):
     
     def __str__(self) -> str:
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.image:
+            self.image = optimize_image_in_upload_model(self.image, desired_height=600)
+        super().save(*args, **kwargs)
     
     def formatted_markdown(self):
         return markdownify(self.description)
