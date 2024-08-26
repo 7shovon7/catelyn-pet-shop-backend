@@ -10,9 +10,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'stock', 'category', 'created_at', 'updated_at')
-    search_fields = ('title', 'category__title')
-    list_filter = ('category', 'price')
+    list_display = ('id', 'title', 'price', 'discounted_price', 'available_stock', 'created_at', 'updated_at')
+    search_fields = ('title',)
+    filter_horizontal = ('categories',)
+    
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

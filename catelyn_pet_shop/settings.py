@@ -252,3 +252,14 @@ K_ORDER_STATUS_LIST = [
     K_STATUS_COMPLETED,
     K_STATUS_CANCELLED,
 ]
+
+K_KG = 'kg'
+K_GRAM = 'gram'
+K_OUNCE = 'ounce'
+K_LITER = 'liter'
+K_SIZE_UNITS = [
+    [K_KG, 'KG'],
+    [K_GRAM, 'Gram'],
+    [K_OUNCE, 'Ounce'],
+    [K_LITER, 'Liter'],
+]
