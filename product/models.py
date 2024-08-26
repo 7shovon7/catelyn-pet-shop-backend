@@ -1,5 +1,6 @@
 # product/models.py
 
+from django.conf import settings
 from django.db import models
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
@@ -27,8 +28,13 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     description = MarkdownxField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
+    discounted_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    available_stock = models.PositiveIntegerField(default=0)
+    total_sold = models.PositiveIntegerField(default=0)
+    size = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    size_unit = models.CharField(max_length=20, choices=settings.K_SIZE_UNITS, blank=True, null=True)
+    # category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
+    categories = models.ManyToManyField(Category, related_name='products', blank=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
