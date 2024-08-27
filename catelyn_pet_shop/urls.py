@@ -8,10 +8,11 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('markdownx/', include('markdownx.urls')),
-    path('profile/', include('core.urls')),
+    # path('profile/', include('core.urls')),
     path('order/', include('order.urls')),
     path('product/', include('product.urls')),
     path('blog/', include('blog.urls')),
+    path('shop_settings/', include('shop_settings.urls')),
 ]
 
 

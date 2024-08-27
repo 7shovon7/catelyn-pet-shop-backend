@@ -1,18 +1,21 @@
 # product/admin.py
 
 from django.contrib import admin
-from .models import Category, Product, Review
+from .models import CustomFieldData, Product, Review
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at', 'updated_at')
-    search_fields = ('title',)
+class CustomFieldDataInline(admin.TabularInline):
+    model = CustomFieldData
+    extra = 1  # Number of extra empty forms to display
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'price', 'discounted_price', 'available_stock', 'created_at', 'updated_at')
     search_fields = ('title',)
     filter_horizontal = ('categories',)
+    inlines = [CustomFieldDataInline]
+    
+    # def has_delete_permission(self, request, obj=None):
+    #     if obj and obj.
     
 
 @admin.register(Review)

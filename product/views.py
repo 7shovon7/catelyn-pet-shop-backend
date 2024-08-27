@@ -1,15 +1,14 @@
-# product/views.py
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, serializers, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from .models import Category, Product, Review
+from .models import Product, Review
 from .paginations import ProductPagination, ReviewPagination
-from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer
+from .serializers import ProductSerializer, ReviewSerializer
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+# class CategoryViewSet(viewsets.ModelViewSet):
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()

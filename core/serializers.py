@@ -1,11 +1,11 @@
 from typing import Any, Dict
-from django.conf import settings
+# from django.conf import settings
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as BaseTokenObtainPairSerializer
 
-from core.models import Customer, ProductManager
+# from core.models import Customer, ProductManager
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
@@ -16,14 +16,14 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         user = super().create(validated_data)
         user_role = validated_data.get('user_role')
         
-        profile_class = None
-        if user_role == settings.K_MANAGER_USER_ROLE:
-            profile_class = ProductManager
-        elif user_role == settings.K_CUSTOMER_USER_ROLE:
-            profile_class = Customer
-        # Create the associated user profile based on role
-        if profile_class is not None:
-            profile_class.objects.create(user=user)
+        # profile_class = None
+        # if user_role == settings.K_MANAGER_USER_ROLE:
+        #     profile_class = ProductManager
+        # elif user_role == settings.K_CUSTOMER_USER_ROLE:
+        #     profile_class = Customer
+        # # Create the associated user profile based on role
+        # if profile_class is not None:
+        #     profile_class.objects.create(user=user)
         
         return user
 
@@ -55,33 +55,33 @@ class TokenObtainPairSerializer(BaseTokenObtainPairSerializer):
         return data
     
     
-class ProductManagerSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-    id = serializers.IntegerField(source='user.id', read_only=True)
-    full_name = serializers.IntegerField(source='user.full_name', read_only=True)
-    email = serializers.IntegerField(source='user.email', read_only=True)
-    phone = serializers.IntegerField(source='user.phone', read_only=True)
-    user_role = serializers.IntegerField(source='user.user_role', read_only=True)
-    joined = serializers.IntegerField(source='user.date_joined', read_only=True)
+# class ProductManagerSerializer(serializers.ModelSerializer):
+#     user = serializers.HiddenField(
+#         default=serializers.CurrentUserDefault()
+#     )
+#     id = serializers.IntegerField(source='user.id', read_only=True)
+#     full_name = serializers.IntegerField(source='user.full_name', read_only=True)
+#     email = serializers.IntegerField(source='user.email', read_only=True)
+#     phone = serializers.IntegerField(source='user.phone', read_only=True)
+#     user_role = serializers.IntegerField(source='user.user_role', read_only=True)
+#     joined = serializers.IntegerField(source='user.date_joined', read_only=True)
     
-    class Meta:
-        model = ProductManager
-        fields = ['id', 'full_name', 'email', 'phone', 'profile_image', 'user_role', 'joined', 'user']
+#     class Meta:
+#         model = ProductManager
+#         fields = ['id', 'full_name', 'email', 'phone', 'profile_image', 'user_role', 'joined', 'user']
     
     
-class CustomerSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-    id = serializers.IntegerField(source='user.id', read_only=True)
-    full_name = serializers.IntegerField(source='user.full_name', read_only=True)
-    email = serializers.IntegerField(source='user.email', read_only=True)
-    phone = serializers.IntegerField(source='user.phone', read_only=True)
-    user_role = serializers.IntegerField(source='user.user_role', read_only=True)
-    joined = serializers.IntegerField(source='user.date_joined', read_only=True)
+# class CustomerSerializer(serializers.ModelSerializer):
+#     user = serializers.HiddenField(
+#         default=serializers.CurrentUserDefault()
+#     )
+#     id = serializers.IntegerField(source='user.id', read_only=True)
+#     full_name = serializers.IntegerField(source='user.full_name', read_only=True)
+#     email = serializers.IntegerField(source='user.email', read_only=True)
+#     phone = serializers.IntegerField(source='user.phone', read_only=True)
+#     user_role = serializers.IntegerField(source='user.user_role', read_only=True)
+#     joined = serializers.IntegerField(source='user.date_joined', read_only=True)
     
-    class Meta:
-        model = ProductManager
-        fields = ['id', 'full_name', 'email', 'phone', 'user_role', 'joined', 'user']
+#     class Meta:
+#         model = ProductManager
+#         fields = ['id', 'full_name', 'email', 'phone', 'user_role', 'joined', 'user']
