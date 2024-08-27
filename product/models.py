@@ -1,6 +1,5 @@
-# product/models.py
-
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
@@ -31,6 +30,12 @@ class Product(models.Model):
         if self.image:
             self.image = optimize_image_in_upload_model(self.image, desired_height=600)
         super().save(*args, **kwargs)
+        
+    def delete(self, *args, **kwargs):
+        # Check if any shipment_item has non-zero stock
+        if self.shipment_items.filter(stock__gt=0).exists():
+            raise ValidationError("Can't delete this product as it's associated shipment items with non-zero stock.")
+        super().delete(*args, **kwargs)
     
     def formatted_markdown(self):
         return markdownify(self.description)
