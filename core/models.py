@@ -44,26 +44,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     
     
-class ProductManager(models.Model):
-    phone = models.CharField(max_length=30, null=True, blank=True)
-    profile_image = models.ImageField(upload_to=change_profile_image_filename, null=True, blank=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='manager')
+# class ProductManager(models.Model):
+#     phone = models.CharField(max_length=30, null=True, blank=True)
+#     profile_image = models.ImageField(upload_to=change_profile_image_filename, null=True, blank=True)
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='manager')
     
-    def __str__(self) -> str:
-        return self.user.full_name
-    
-    
-class Customer(models.Model):
-    phone = models.CharField(max_length=30, null=True, blank=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='customer')
-    
-    def __str__(self) -> str:
-        return self.user.full_name
+#     def __str__(self) -> str:
+#         return self.user.full_name
     
     
-class Address(models.Model):
-    local_adress = models.CharField(max_length=255)
-    post_code = models.CharField(max_length=4)
-    district = models.CharField(max_length=50)
+# class Customer(models.Model):
+#     phone = models.CharField(max_length=30, null=True, blank=True)
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='customer')
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
+#     def __str__(self) -> str:
+#         return self.user.full_name
+    
+    
+# class Address(models.Model):
+#     local_adress = models.CharField(max_length=255)
+#     post_code = models.CharField(max_length=4)
+#     district = models.CharField(max_length=50)
+    
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
