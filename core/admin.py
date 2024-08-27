@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, _
-from .models import Address, Customer, ProductManager, User
+from .models import User
 
 
 @admin.register(User)
@@ -41,4 +41,4 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = ("date_joined",)
 
 
-admin.site.register([Address, ProductManager, Customer])
+# admin.site.register([Address, ProductManager, Customer])
