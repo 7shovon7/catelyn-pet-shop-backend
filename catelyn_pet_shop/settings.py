@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'shop_settings',
     'shipments',
     'profiles',
+    'orders',
 ]
 
 MIDDLEWARE = [

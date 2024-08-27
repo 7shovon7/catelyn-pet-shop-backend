@@ -14,8 +14,10 @@ class ProductAdmin(admin.ModelAdmin):
     filter_horizontal = ('categories',)
     inlines = [CustomFieldDataInline]
     
-    # def has_delete_permission(self, request, obj=None):
-    #     if obj and obj.
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.shipment_items.filter(stock__gt=0).exists():
+            return False
+        return super().has_delete_permission(request, obj)
     
 
 @admin.register(Review)
