@@ -1,6 +1,7 @@
 # product/serializers.py
 from rest_framework import serializers
-from .models import Category, Product, Review
+from .models import Product, Review
+from shop_settings.models import Category
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

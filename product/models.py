@@ -6,22 +6,7 @@ from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 from core.models import User
 from core.utils import optimize_image_in_upload_model
-
-
-class Category(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    image = models.ImageField(upload_to='product/categories/', blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self) -> str:
-        return self.title
-    
-    def save(self, *args, **kwargs):
-        if self.image:
-            self.image = optimize_image_in_upload_model(self.image, desired_height=300)
-        super().save(*args, **kwargs)
+from shop_settings.models import Category, CustomField
 
 
 class Product(models.Model):
@@ -49,6 +34,18 @@ class Product(models.Model):
     
     def formatted_markdown(self):
         return markdownify(self.description)
+    
+    
+class CustomFieldData(models.Model):
+    product = models.ForeignKey(Product, related_name='custom_fields', on_delete=models.CASCADE)
+    field = models.ForeignKey(CustomField, related_name='fields', on_delete=models.CASCADE)
+    value = models.CharField(max_length=255)
+    
+    def __str__(self) -> str:
+        return f"{self.field.name}: {self.value}"
+    
+    class Meta:
+        unique_together = ['product', 'field']
 
 
 class Review(models.Model):
