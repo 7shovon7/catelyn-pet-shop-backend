@@ -1,9 +1,16 @@
 from typing import Any, Dict
-# from django.conf import settings
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+# from django.utils.crypto import get_random_string
+from django.utils.html import strip_tags
+from django.utils.translation import gettext_lazy as _
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as BaseTokenObtainPairSerializer
+
+from .models import User
 
 # from core.models import Customer, ProductManager
 
@@ -55,33 +62,54 @@ class TokenObtainPairSerializer(BaseTokenObtainPairSerializer):
         return data
     
     
-# class ProductManagerSerializer(serializers.ModelSerializer):
-#     user = serializers.HiddenField(
-#         default=serializers.CurrentUserDefault()
-#     )
-#     id = serializers.IntegerField(source='user.id', read_only=True)
-#     full_name = serializers.IntegerField(source='user.full_name', read_only=True)
-#     email = serializers.IntegerField(source='user.email', read_only=True)
-#     phone = serializers.IntegerField(source='user.phone', read_only=True)
-#     user_role = serializers.IntegerField(source='user.user_role', read_only=True)
-#     joined = serializers.IntegerField(source='user.date_joined', read_only=True)
-    
-#     class Meta:
-#         model = ProductManager
-#         fields = ['id', 'full_name', 'email', 'phone', 'profile_image', 'user_role', 'joined', 'user']
-    
-    
-# class CustomerSerializer(serializers.ModelSerializer):
-#     user = serializers.HiddenField(
-#         default=serializers.CurrentUserDefault()
-#     )
-#     id = serializers.IntegerField(source='user.id', read_only=True)
-#     full_name = serializers.IntegerField(source='user.full_name', read_only=True)
-#     email = serializers.IntegerField(source='user.email', read_only=True)
-#     phone = serializers.IntegerField(source='user.phone', read_only=True)
-#     user_role = serializers.IntegerField(source='user.user_role', read_only=True)
-#     joined = serializers.IntegerField(source='user.date_joined', read_only=True)
-    
-#     class Meta:
-#         model = ProductManager
-#         fields = ['id', 'full_name', 'email', 'phone', 'user_role', 'joined', 'user']
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        user = User.objects.filter(email=value).first()
+        if not user:
+            raise serializers.ValidationError("No user is associated with this email address.")
+        return value
+
+    def save(self):
+        user = User.objects.get(email=self.validated_data['email'])
+        user.set_reset_code()
+
+        # Prepare email context
+        context = {
+            'reset_code': user.reset_code,
+            'site_name': 'Catelyn Pet Shop',
+            'full_name': user.full_name,
+        }
+
+        # Render the HTML template
+        html_content = render_to_string('emails/password_reset.html', context)
+        text_content = strip_tags(html_content)
+
+        # Send email
+        email = EmailMultiAlternatives(
+            subject="Password Reset on Catelyn Pet Shop",
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[user.email],
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+        
+        
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    reset_code = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        user = User.objects.filter(email=data['email']).first()
+        if not user or not user.validate_reset_code(data['reset_code']):
+            raise serializers.ValidationError("Invalid reset code or email.")
+        return data
+
+    def save(self):
+        user = User.objects.get(email=self.validated_data['email'])
+        user.set_password(self.validated_data['new_password'])
+        user.clear_reset_code()
+        user.save()
