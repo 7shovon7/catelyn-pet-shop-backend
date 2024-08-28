@@ -7,6 +7,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DB_BACKUP_DIR = os.getenv('DB_BACKUP_DIR')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
