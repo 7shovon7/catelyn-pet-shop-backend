@@ -2,7 +2,28 @@ from rest_framework import permissions, status, generics
 from rest_framework.response import Response
 
 # from .models import User
-from .serializers import PasswordResetSerializer, PasswordResetConfirmSerializer
+from .serializers import PasswordResetSerializer, PasswordResetConfirmSerializer, UserCreateSerializer
+
+
+class RegisterView(generics.GenericAPIView):
+    serializer_class = UserCreateSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        
+        # Include tokens in the response
+        tokens = serializer.get_tokens(user)
+        return Response({
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "user_role": user.user_role,
+            "access": tokens.get('access'),
+            "refresh": tokens.get('refresh'),
+        }, status=status.HTTP_201_CREATED)
 
 # class UserViewSet(ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 #     queryset = User.objects.all()

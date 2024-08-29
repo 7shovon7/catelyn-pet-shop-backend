@@ -1,6 +1,6 @@
 from django.urls import path
 # from rest_framework.routers import SimpleRouter
-from .views import PasswordResetView, PasswordResetConfirmView
+from .views import PasswordResetView, PasswordResetConfirmView, RegisterView
 
 
 # router = SimpleRouter()
@@ -9,4 +9,5 @@ from .views import PasswordResetView, PasswordResetConfirmView
 urlpatterns = [
     path('users/reset_password/', PasswordResetView.as_view(), name='password_reset'),
     path('users/reset_password_confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('users/register/', RegisterView.as_view(), name='register'),
 ]

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
@@ -24,13 +25,16 @@ class PromoCode(models.Model):
 
 
 class Order(models.Model):
+    STATUS_CHOICES = [(c, c) for c in settings.K_ORDER_STATUS_LIST]
     # TODO: have to add static customer and address string here to save these 2 permanently and the proper signals
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, related_name='orders')
+    title = models.CharField(max_length=255, blank=True, null=True)
     address = models.ForeignKey(CustomerAddress, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    promo_code = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, null=True, blank=True)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    title = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=settings.K_STATUS_PENDING)
     
     def __str__(self) -> str:
         return f"{self.title}"
@@ -70,7 +74,7 @@ class OrderItem(models.Model):
         # Update stock in Product and ShipmentProduct
         self.shipment_product.product.available_stock -= quantity_to_be_updated
         self.shipment_product.product.save()
-        self.shipment_product.available_stock -= quantity_to_be_updated
+        self.shipment_product.stock -= quantity_to_be_updated
         self.shipment_product.save()
         # Update complete order total
         self.order.save()

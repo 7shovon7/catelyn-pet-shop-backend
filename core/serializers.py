@@ -9,6 +9,7 @@ from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as BaseTokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 
@@ -16,8 +17,10 @@ from .models import User
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
+    tokens = serializers.SerializerMethodField()
+    
     class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'email', 'password', 'full_name', 'user_role']
+        fields = ['id', 'email', 'password', 'full_name', 'user_role', 'tokens']
 
     def create(self, validated_data):
         user = super().create(validated_data)
@@ -33,6 +36,13 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         #     profile_class.objects.create(user=user)
         
         return user
+    
+    def get_tokens(self, user):
+        refresh = RefreshToken.for_user(user)
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
 
 
 class UserSerializer(BaseUserSerializer):
@@ -52,14 +62,20 @@ class TokenObtainPairSerializer(BaseTokenObtainPairSerializer):
     
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
         data = super().validate(attrs)
-        
-        data['user'] = {
+        # data['user'] = {
+        #     "id": self.user.id,
+        #     "email": self.user.email,
+        #     "full_name": self.user.full_name,
+        #     "user_role": self.user.user_role
+        # }
+        return {
             "id": self.user.id,
             "email": self.user.email,
             "full_name": self.user.full_name,
-            "user_role": self.user.user_role
+            "user_role": self.user.user_role,
+            "access": data.get('access'),
+            "refresh": data.get('refresh'),
         }
-        return data
     
     
 class PasswordResetSerializer(serializers.Serializer):
