@@ -1,6 +1,9 @@
+from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
+from django.utils.crypto import get_random_string
 
 from core.utils import change_profile_image_filename
 
@@ -37,11 +40,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    
+    reset_code = models.CharField(max_length=6, null=True, blank=True)
+    reset_code_expiry = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name', 'user_role']
 
     objects = UserManager()
+    
+    def set_reset_code(self):
+        self.reset_code = self._generate_reset_code()
+        self.reset_code_expiry = timezone.now() + timedelta(minutes=10)
+        self.save()
+
+    def _generate_reset_code(self):
+        return get_random_string(6, allowed_chars='0123456789')
+
+    def validate_reset_code(self, code):
+        if self.reset_code == code and self.reset_code_expiry and timezone.now() < self.reset_code_expiry:
+            return True
+        return False
+
+    def clear_reset_code(self):
+        self.reset_code = None
+        self.reset_code_expiry = None
+        self.save()
     
     
 # class ProductManager(models.Model):
