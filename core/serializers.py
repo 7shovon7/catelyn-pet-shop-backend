@@ -62,20 +62,13 @@ class TokenObtainPairSerializer(BaseTokenObtainPairSerializer):
     
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
         data = super().validate(attrs)
-        # data['user'] = {
-        #     "id": self.user.id,
-        #     "email": self.user.email,
-        #     "full_name": self.user.full_name,
-        #     "user_role": self.user.user_role
-        # }
-        return {
+        data['user'] = {
             "id": self.user.id,
             "email": self.user.email,
             "full_name": self.user.full_name,
-            "user_role": self.user.user_role,
-            "access": data.get('access'),
-            "refresh": data.get('refresh'),
+            "user_role": self.user.user_role
         }
+        return data
     
     
 class PasswordResetSerializer(serializers.Serializer):

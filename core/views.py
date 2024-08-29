@@ -17,12 +17,13 @@ class RegisterView(generics.GenericAPIView):
         # Include tokens in the response
         tokens = serializer.get_tokens(user)
         return Response({
-            "id": user.id,
-            "email": user.email,
-            "full_name": user.full_name,
-            "user_role": user.user_role,
-            "access": tokens.get('access'),
-            "refresh": tokens.get('refresh'),
+            **tokens,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "full_name": user.full_name,
+                "user_role": user.user_role,
+            },
         }, status=status.HTTP_201_CREATED)
 
 # class UserViewSet(ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
