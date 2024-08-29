@@ -1,7 +1,26 @@
 from django.db import models
+from django.utils import timezone
 
 from profiles.models import Customer, CustomerAddress, CustomerContact
 from shipments.models import ShipmentProduct
+
+
+class PromoCode(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2)  # e.g., 20.00 for 20% discount
+    active = models.BooleanField(default=True)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    min_order_amount = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.code
+
+    def is_valid(self):
+        now = timezone.now()
+        return self.active and self.valid_from <= now <= self.valid_to
 
 
 class Order(models.Model):
@@ -49,9 +68,9 @@ class OrderItem(models.Model):
             quantity_to_be_updated = self.quantity - original_item.quantity
         
         # Update stock in Product and ShipmentProduct
-        self.shipment_product.product.stock -= quantity_to_be_updated
+        self.shipment_product.product.available_stock -= quantity_to_be_updated
         self.shipment_product.product.save()
-        self.shipment_product.stock -= quantity_to_be_updated
+        self.shipment_product.available_stock -= quantity_to_be_updated
         self.shipment_product.save()
         # Update complete order total
         self.order.save()

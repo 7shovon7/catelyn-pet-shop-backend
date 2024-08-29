@@ -49,12 +49,12 @@ class ShipmentProduct(models.Model):
             self.stock = stock
             
             if self.product:
-                self.product.stock += stock
+                self.product.available_stock += stock
                 self.product.save()
 
         # Keep track of the product name, in case the product is deleted
         if self.product:
-            self.product_name = self.product.name
+            self.product_name = self.product.title
             
         # Update Shipment total
         new_price = self.calculate_this_shipment_product_price()
@@ -64,7 +64,7 @@ class ShipmentProduct(models.Model):
         super().save(*args, **kwargs)
         
     def delete(self, *args, **kwargs):
-        self.product.stock -= self.calculate_this_shipment_product_stock()
+        self.product.available_stock -= self.calculate_this_shipment_product_stock()
         self.shipment.price_value -= self.calculate_this_shipment_product_price()
         return super().delete(*args, **kwargs)
         

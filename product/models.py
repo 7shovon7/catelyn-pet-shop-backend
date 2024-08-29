@@ -10,11 +10,11 @@ from shop_settings.models import Category, CustomField
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
-    description = MarkdownxField()
+    description = MarkdownxField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    available_stock = models.PositiveIntegerField(default=0)
-    total_sold = models.PositiveIntegerField(default=0)
+    available_stock = models.PositiveIntegerField(default=0, blank=True)
+    total_sold = models.PositiveIntegerField(default=0, blank=True)
     size = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     size_unit = models.CharField(max_length=20, choices=settings.K_SIZE_UNITS, blank=True, null=True)
     # category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
@@ -63,4 +63,4 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Review by {self.user.username} for {self.product.name}"
+        return f"Review by {self.user.full_name} for {self.product.title}"
