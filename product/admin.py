@@ -9,7 +9,7 @@ class CustomFieldDataInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'price', 'discounted_price', 'available_stock', 'created_at', 'updated_at')
+    list_display = ('id', 'title', 'price', 'discounted_price', 'available_stock', 'custom_stock_out_signal', 'created_at', 'updated_at')
     search_fields = ('title',)
     filter_horizontal = ('categories',)
     inlines = [CustomFieldDataInline]
