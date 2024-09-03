@@ -16,7 +16,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = ProductPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['categories']
+    filterset_fields = ['categories', 'is_featured']
     search_fields = ['title', 'description']
 
 class ReviewViewSet(viewsets.ModelViewSet):
