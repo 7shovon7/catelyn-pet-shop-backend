@@ -18,7 +18,7 @@ class Product(models.Model):
     total_sold = models.PositiveIntegerField(default=0, blank=True)
     size = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     size_unit = models.CharField(max_length=20, choices=settings.K_SIZE_UNITS, blank=True, null=True)
-    # category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
+    is_featured = models.BooleanField(default=False, blank=True)
     categories = models.ManyToManyField(Category, related_name='products', blank=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
