@@ -14,6 +14,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     available_stock = models.PositiveIntegerField(default=0, blank=True)
+    custom_stock_out_signal = models.BooleanField(blank=True, null=True)
     total_sold = models.PositiveIntegerField(default=0, blank=True)
     size = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     size_unit = models.CharField(max_length=20, choices=settings.K_SIZE_UNITS, blank=True, null=True)
