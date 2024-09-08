@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from core.models import User
 
@@ -50,10 +51,10 @@ class WholesalerContact(models.Model):
     
 # Customer
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='customer')
     
     def __str__(self) -> str:
-        return self.user.full_name
+        return self.user.full_name if self.user else "Deleted User"
     
     
 class CustomerAddress(models.Model):
