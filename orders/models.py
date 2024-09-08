@@ -31,7 +31,7 @@ class Order(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     address = models.ForeignKey(CustomerAddress, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    promo_code = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, null=True, blank=True)
+    promo_code = models.ForeignKey('PromoCode', on_delete=models.SET_NULL, null=True, blank=True)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=settings.K_STATUS_PENDING)
@@ -47,7 +47,11 @@ class Order(models.Model):
             self.title = f"{self.customer.user.full_name} - {self.created_at}"
         if self.pk:
             self.total_price = self.calculate_total()
-        return super().save(*args, **kwargs)
+            if self.promo_code and self.promo_code.is_valid():
+                self.discounted_price = self.total_price * (1 - self.promo_code.discount / 100)
+            else:
+                self.discounted_price = None
+        super().save(*args, **kwargs)
     
 
 class OrderItem(models.Model):
